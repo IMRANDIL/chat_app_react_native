@@ -11,15 +11,15 @@ import {
 import {signOut} from 'firebase/auth';
 import {auth, database} from '../config/firebase';
 import {useNavigation} from '@react-navigation/native';
-import AntIcon from 'react-native-vector-icons/AntDesign';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import colors from '../colors';
 
-const ChatScreen = () => {
+export default function Chat() {
   const [messages, setMessages] = useState([]);
   const navigation = useNavigation();
 
   const onSignOut = () => {
-    signOut(auth).catch(error => console.log(error));
+    signOut(auth).catch(error => console.log('Error logging out: ', error));
   };
 
   useLayoutEffect(() => {
@@ -30,7 +30,7 @@ const ChatScreen = () => {
             marginRight: 10,
           }}
           onPress={onSignOut}>
-          <AntIcon
+          <AntDesign
             name="logout"
             size={24}
             color={colors.gray}
@@ -41,7 +41,55 @@ const ChatScreen = () => {
     });
   }, [navigation]);
 
-  return <GiftedChat messages={messages} />;
-};
+  useLayoutEffect(() => {
+    const collectionRef = collection(database, 'chats');
+    const q = query(collectionRef, orderBy('createdAt', 'desc'));
 
-export default ChatScreen;
+    const unsubscribe = onSnapshot(q, querySnapshot => {
+      console.log('querySnapshot unsusbscribe');
+      setMessages(
+        querySnapshot.docs.map(doc => ({
+          _id: doc.data()._id,
+          createdAt: doc.data().createdAt.toDate(),
+          text: doc.data().text,
+          user: doc.data().user,
+        })),
+      );
+    });
+    return unsubscribe;
+  }, []);
+
+  const onSend = useCallback((messages = []) => {
+    setMessages(previousMessages =>
+      GiftedChat.append(previousMessages, messages),
+    );
+    // setMessages([...messages, ...messages]);
+    const {_id, createdAt, text, user} = messages[0];
+    addDoc(collection(database, 'chats'), {
+      _id,
+      createdAt,
+      text,
+      user,
+    });
+  }, []);
+
+  return (
+    <GiftedChat
+      messages={messages}
+      showAvatarForEveryMessage={false}
+      showUserAvatar={false}
+      onSend={messages => onSend(messages)}
+      messagesContainerStyle={{
+        backgroundColor: '#fff',
+      }}
+      textInputStyle={{
+        backgroundColor: '#fff',
+        borderRadius: 20,
+      }}
+      user={{
+        _id: auth?.currentUser?.email,
+        avatar: 'https://i.pravatar.cc/300',
+      }}
+    />
+  );
+}
