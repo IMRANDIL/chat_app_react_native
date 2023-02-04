@@ -12,7 +12,7 @@ import {
   Alert,
   Dimensions,
 } from 'react-native';
-import {signInWithEmailAndPassword} from 'firebase/auth';
+import {createUserWithEmailAndPassword} from 'firebase/auth';
 import {auth} from '../config/firebase';
 const backImage = require('../assets/backImage2.png');
 
@@ -26,7 +26,7 @@ export default function Signup({navigation}) {
   const onHandleLogin = async () => {
     try {
       if (email !== '' || password !== '') {
-        const authentication = await signInWithEmailAndPassword(
+        const authentication = await createUserWithEmailAndPassword(
           auth,
           email,
           password,
