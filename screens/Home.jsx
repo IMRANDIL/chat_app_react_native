@@ -19,7 +19,7 @@ const Home = () => {
           icon={faSearch}
           size={24}
           color={colors.gray}
-          style={{marginLeft: 15}}
+          //   style={{marginLeft: 15}}
         />
       ),
       headerRight: () => (

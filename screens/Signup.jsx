@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   StatusBar,
   Alert,
+  Keyboard,
   Dimensions,
 } from 'react-native';
 import {createUserWithEmailAndPassword} from 'firebase/auth';
@@ -22,6 +23,13 @@ const deviceWidth = Dimensions.get('window').width;
 export default function Signup({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const input1Ref = useRef(null);
+  const input2Ref = useRef(null);
+
+  const handleTabPress = () => {
+    Keyboard.dismiss();
+    input2Ref.current.focus();
+  };
 
   const onHandleLogin = async () => {
     try {
@@ -52,8 +60,10 @@ export default function Signup({navigation}) {
           autoCapitalize="none"
           keyboardType="email-address"
           textContentType="emailAddress"
+          onSubmitEditing={handleTabPress}
           autoFocus={true}
           value={email}
+          ref={input1Ref}
           onChangeText={text => setEmail(text)}
         />
         <TextInput
@@ -64,6 +74,8 @@ export default function Signup({navigation}) {
           secureTextEntry={true}
           textContentType="password"
           value={password}
+          ref={input2Ref}
+          onSubmitEditing={handleTabPress}
           onChangeText={text => setPassword(text)}
         />
         <TouchableOpacity
