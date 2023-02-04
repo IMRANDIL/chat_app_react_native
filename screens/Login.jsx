@@ -10,10 +10,14 @@ import {
   TouchableOpacity,
   StatusBar,
   Alert,
+  Dimensions,
 } from 'react-native';
 import {signInWithEmailAndPassword} from 'firebase/auth';
 import {auth} from '../config/firebase';
 const backImage = require('../assets/backImage.png');
+
+const deviceHeight = Dimensions.get('window').height;
+const deviceWidth = Dimensions.get('window').width;
 
 export default function Login({navigation}) {
   const [email, setEmail] = useState('');
@@ -115,15 +119,15 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   backImage: {
-    width: '100%',
+    width: deviceWidth,
     height: 340,
     position: 'absolute',
     top: 0,
     resizeMode: 'cover',
   },
   whiteSheet: {
-    width: '100%',
-    height: '95%',
+    width: deviceWidth,
+    height: deviceHeight * 0.8,
     position: 'absolute',
     bottom: 0,
     backgroundColor: '#fff',
