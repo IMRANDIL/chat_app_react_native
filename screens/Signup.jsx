@@ -12,6 +12,7 @@ import {
   Alert,
   Keyboard,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import {createUserWithEmailAndPassword} from 'firebase/auth';
 import {auth} from '../config/firebase';
@@ -22,6 +23,7 @@ const deviceWidth = Dimensions.get('window').width;
 
 export default function Signup({navigation}) {
   const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState('');
   const input1Ref = useRef(null);
   const input2Ref = useRef(null);
@@ -34,6 +36,7 @@ export default function Signup({navigation}) {
   const onHandleLogin = async () => {
     try {
       if (email !== '' || password !== '') {
+        setIsLoading(true);
         const authentication = await createUserWithEmailAndPassword(
           auth,
           email,
@@ -41,12 +44,22 @@ export default function Signup({navigation}) {
         );
         if (authentication) {
           console.log('login successful');
+          setIsLoading(false);
         }
       }
     } catch (error) {
       Alert.alert('Login error', error.message);
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

@@ -11,6 +11,7 @@ import {
   StatusBar,
   Alert,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import {signInWithEmailAndPassword} from 'firebase/auth';
 import {auth} from '../config/firebase';
@@ -22,10 +23,11 @@ const deviceWidth = Dimensions.get('window').width;
 export default function Login({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const [isLoading, setIsLoading] = useState(false);
   const onHandleLogin = async () => {
     try {
       if (email !== '' || password !== '') {
+        setIsLoading(true);
         const authentication = await signInWithEmailAndPassword(
           auth,
           email,
@@ -33,12 +35,22 @@ export default function Login({navigation}) {
         );
         if (authentication) {
           console.log('login successful');
+          setIsLoading(false);
         }
       }
     } catch (error) {
       Alert.alert('Login error', error.message);
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
