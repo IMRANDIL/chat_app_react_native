@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {signInWithEmailAndPassword} from 'firebase/auth';
 import {auth} from '../config/firebase';
-const backImage = require('../assets/backImage.png');
+const backImage = require('../assets/backImage2.png');
 
 const deviceHeight = Dimensions.get('window').height;
 const deviceWidth = Dimensions.get('window').width;
@@ -101,7 +101,7 @@ export default function Login({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f57c00',
   },
   title: {
     fontSize: 36,
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   },
   whiteSheet: {
     width: deviceWidth,
-    height: deviceHeight * 0.8,
+    height: deviceHeight * 0.75,
     position: 'absolute',
     bottom: 0,
     backgroundColor: '#fff',
