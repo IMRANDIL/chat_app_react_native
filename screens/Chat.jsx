@@ -1,13 +1,10 @@
-import {View, Text, SafeAreaView} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {GiftedChat} from 'react-native-gifted-chat';
 
 const ChatScreen = () => {
-  return (
-    <SafeAreaView>
-      <GiftedChat />
-    </SafeAreaView>
-  );
+  const [messages, setMessages] = useState([]);
+
+  return <GiftedChat messages={messages} />;
 };
 
 export default ChatScreen;
