@@ -2,7 +2,7 @@ import firebase from 'firebase';
 import config from './dotenvconfig';
 
 const firebaseConfig = {
-  apiKey: config.apiKey,
+  apiKey: config.API_KEY,
   authDomain: config.authDomain,
   databaseURL: config.databaseURL,
   projectId: config.projectId,

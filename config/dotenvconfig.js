@@ -1,5 +1,5 @@
 import {
-  apiKey,
+  API_KEY,
   authDomain,
   projectId,
   storageBucket,
@@ -9,7 +9,7 @@ import {
 } from '@env';
 
 export default {
-  apiKey,
+  API_KEY,
   authDomain,
   projectId,
   storageBucket,
