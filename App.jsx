@@ -1,5 +1,5 @@
 import React, {useEffect, useState, createContext, useContext} from 'react';
-import config from './config/dotenvconfig';
+import {auth} from './config/firebase';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from './screens/Home';
@@ -20,27 +20,59 @@ const AuthenticatedUserProvider = ({children}) => {
     </AuthenticatedUserContext.Provider>
   );
 };
-export default function App(props) {
+
+function ChatStack() {
+  return (
+    <Stack.Navigator defaultScreenOptions={Home}>
+      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Chat" component={ChatScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function AuthStack() {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Signup" component={Signup} />
+    </Stack.Navigator>
+  );
+}
+
+function RootNavigator() {
+  const {user, setUser} = useContext(AuthenticatedUserContext);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    // console.log(config.API_KEY);
-  }, []);
+    // onAuthStateChanged returns an unsubscriber
+    const unsubscribeAuth = onAuthStateChanged(
+      auth,
+      async authenticatedUser => {
+        authenticatedUser ? setUser(authenticatedUser) : setUser(null);
+        setIsLoading(false);
+      },
+    );
+    // unsubscribe auth listener on unmount
+    return unsubscribeAuth;
+  }, [user]);
+  if (isLoading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          options={{headerTitleAlign: 'center', headerShown: false}}
-          navigation={props.navigation}
-        />
-        <Stack.Screen
-          name="Signup"
-          component={Signup}
-          options={{headerTitleAlign: 'center', headerShown: false}}
-          navigation={props.navigation}
-        />
-      </Stack.Navigator>
+      {user ? <ChatStack /> : <AuthStack />}
     </NavigationContainer>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthenticatedUserProvider>
+      <RootNavigator />
+    </AuthenticatedUserProvider>
   );
 }
