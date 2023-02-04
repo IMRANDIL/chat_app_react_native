@@ -28,6 +28,7 @@ export default function App(props) {
           name="Signup"
           component={Signup}
           options={{headerTitleAlign: 'center', headerShown: false}}
+          navigation={props.navigation}
         />
       </Stack.Navigator>
     </NavigationContainer>
