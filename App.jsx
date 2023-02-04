@@ -20,7 +20,7 @@ export default function App() {
         <Stack.Screen
           name="Login"
           component={Login}
-          options={{headerTitleAlign: 'center'}}
+          options={{headerTitleAlign: 'center', headerShown: false}}
         />
       </Stack.Navigator>
     </NavigationContainer>
